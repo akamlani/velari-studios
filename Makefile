@@ -22,7 +22,7 @@ endif
 
 #################### Makefile Context
 .ONESHELL:
-.SHELLFLAGS := -eu -o pipefail -c 
+.SHELLFLAGS := -eu -o pipefail -c
 .DEFAULT_GOAL := info
 
 .PHONY: help info info_dotfiles
@@ -59,7 +59,7 @@ install:
 install_setup:
 	@echo "Installing Setup for $(PACKAGE_NAME)..."
 	mkdir -p .velari
-	mkdir -p _build config docs
+	mkdir -p _build config docs scripts examples
 	touch .env.template
 	touch docs/.gitkeep
 
@@ -82,6 +82,10 @@ link_vaultspace:
 	ln -sfn $(VAULTSPACE_ROOT)/contextlib 	stores/contextlib
 	ln -sfn $(VAULTSPACE_ROOT)/artifactlib 	stores/artifactlib
 	ln -sfn $(VAULTSPACE_ROOT)/promptlib 	stores/promptlib
+
+#################### Agentic Specific
+
+
 
 #################### Install Python Environment and Dependencies
 .PHONY: conda_config uv_download uv_install uv_sync_project_name uv_sync install_python
