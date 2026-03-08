@@ -1,0 +1,7 @@
+defaults:
+    - experimentation: experiment
+    - tracing: mlflow
+    - _self_
+
+# top level configuration
+logging: logging.yaml

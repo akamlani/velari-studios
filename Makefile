@@ -31,7 +31,6 @@ help:
 	@echo "download  : downloads dependencies distribution"
 	@echo "system    : Installs System Libraries per $(PLATFORM_TYPE)"
 	@echo "install   : create environment based on project $(PACKAGE_INSTALL_NAME)"
-	@echo "verify_agents: compare $(COMPONENT_DIR) vs .claude trees"
 	@echo "format    : formatting and linting of project $(PACKAGE_NAME)"
 	@echo "clean     : cleans all files or project $(PACKAGE_INSTALL_NAME)"
 	@echo "test      : execute unit testing"
@@ -59,7 +58,7 @@ install:
 install_setup:
 	@echo "Installing Setup for $(PACKAGE_NAME)..."
 	mkdir -p .velari
-	mkdir -p _build config docs scripts examples
+	mkdir -p _build config data docs scripts apps examples templates
 	touch .env.template
 	touch docs/.gitkeep
 

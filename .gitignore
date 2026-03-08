@@ -1,5 +1,6 @@
 # Dotfiles: Ignore symlinked dotfiles directories
 _build/
+outputs/
 stores/
 # for dotfiles
 .vscode
