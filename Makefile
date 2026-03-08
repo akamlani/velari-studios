@@ -134,3 +134,18 @@ uv_sync_project_name:
 	@echo "Before: $$(grep -E '^name[[:space:]]*=' pyproject.toml)"
 	@sed -E -i '' "s|^name[[:space:]]*=.*|name = \"$(PACKAGE_INSTALL_NAME)\"|" pyproject.toml
 	@echo "After : $$(grep -E '^name[[:space:]]*=' pyproject.toml)"
+
+
+
+#################### General
+.PHONY: clean
+clean:
+	echo "Cleaning project files for installed package ..."
+	rm -rf ./__pycache__
+	find . -name "*.pyc" -delete
+	find . -name "*.pyo" -delete
+	find . -name "__pycache__" -delete
+	find . -type d -name ".pytest_cache" -exec rm -rf {} +
+	find . -type d -name "outputs" -exec rm -rf {} +
+	find . -name "*.out" -delete
+	find . -name ".DS_Store" -delete
