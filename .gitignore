@@ -1,3 +1,14 @@
+# Dotfiles: Ignore symlinked dotfiles directories
+_build/
+stores/
+.vscode/
+.github/
+# Enviornment 
+.env
+
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
