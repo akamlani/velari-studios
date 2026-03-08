@@ -3,19 +3,21 @@ _build/
 stores/
 .vscode/
 .github/
-# Enviornment 
+# Environment 
 .env
-
-
-
-
+# Python Virtual Environments
+.venv/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
 *$py.class
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# C extensions
-*.so
+
+
+
+
 
 # Distribution / packaging
 .Python
@@ -86,8 +88,6 @@ docs/_build/
 .pybuilder/
 target/
 
-# Jupyter Notebook
-.ipynb_checkpoints
 
 # IPython
 profile_default/

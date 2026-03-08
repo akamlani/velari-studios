@@ -1,7 +1,9 @@
 # Makefile for setting up environment
 #################### Read Environment
 RUNTIME_FILE := ./config/runtime/runtime.env
+PYTHON_FILE  := ./config/runtime/python.env
 include $(RUNTIME_FILE)
+include $(PYTHON_FILE)
 
 #################### Makefile Configuration
 GIT_ROOT ?= $(shell git rev-parse --show-toplevel)
@@ -76,3 +78,47 @@ link_vaultspace:
 	ln -sfn $(VAULTSPACE_ROOT)/contextlib 	stores/contextlib
 	ln -sfn $(VAULTSPACE_ROOT)/artifactlib 	stores/artifactlib
 	ln -sfn $(VAULTSPACE_ROOT)/promptlib 	stores/promptlib
+
+#################### Install Python Environment and Dependencies
+.PHONY: conda_config uv_download uv_install uv_sync install_python
+
+install_python:
+	@echo "Installing Python with uv..."
+	$(MAKE) conda_config
+	$(MAKE) uv_download
+	$(MAKE) uv_install
+	$(MAKE) uv_sync
+
+conda_config:
+	@if command -v conda >/dev/null 2>&1; then \
+		echo "Configuration of Conda Environment..."; \
+		conda config --set ssl_verify false; \
+		conda config --set auto_activate_base false; \
+		conda deactivate; \
+	else \
+		echo "Conda Environment not present; skipping conda_config."; \
+	fi
+
+uv_download:
+	@echo "Installing UV package manager..."
+	curl -LsSf https://astral.sh/uv/install.sh | sh
+	uv   self update
+	echo "UV version: $$(uv --version)"
+
+
+# UV uses .python-version (or system default). Set it first so uv init and venv
+# use PYTHON_VERSION; pass --python to uv venv so the venv is pinned explicitly.
+uv_install:
+	@echo "UV env $(PACKAGE_INSTALL_NAME)..."
+	@echo "$(PYTHON_VERSION)" > .python-version
+	@if [ ! -f pyproject.toml ]; then uv init; fi
+	@uv python install $(PYTHON_VERSION)
+	@if [ ! -d "$(PYTHON_VENV_DIR)" ]; then uv venv "$(PYTHON_VENV_DIR)" --python $(PYTHON_VERSION); fi
+	@rm -f main.py
+
+.ONESHELL:
+uv_sync:
+	@echo "Syncing UV Environment for project $(PACKAGE_INSTALL_NAME)..."
+	source $(PYTHON_VENV_DIR)/bin/activate && \
+	uv sync --active && uv pip install --upgrade pip ipykernel ipython && uv sync --active;
+#	uv pip install -e .;
