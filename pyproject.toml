@@ -1,7 +1,45 @@
 [project]
-name = "velari-studios"
-version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.12"
-dependencies = []
+name                = "velari-studios-ai"
+version             = "0.1.0"
+authors             = [{name = "Ari Kamlani", email = "akamlani@gmail.com"}]
+description         = "Studio Suite of AI Prototyping Components"
+requires-python     = ">=3.12"
+readme              = "README.md"
+license             = {text = "Apache-2.0"}
+keywords            = ["ai", "experiments", "incubation", "innovation"]
+dependencies = [
+    "appdirs>=1.4.4",
+    "hydra-core>=1.3.2",
+    "numpy>=2.4.2",
+    "omegaconf>=2.3.0",
+    "openpyxl>=3.1.5",
+    "pandas>=2.0.0,<3.0.0",
+    "protobuf>=6.33.5",
+    "seaborn>=0.13.2",
+]
+
+
+[project.optional-dependencies]
+# Extra tools for development
+dev = [
+    "ruff>=0.14.10"
+]
+
+[tool.setuptools.packages.find]
+where               = ["."]
+include             = ["velari.studios*"]
+
+[tool.ruff]
+line-length         = 120 #88
+exclude             = [".git", "__pycache__"]
+target-version      = "py312"
+
+[tool.ruff.lint]
+# "E999": unexpected token Newline
+# "F401": module imported but unused
+# "E731": do not assign a lambda expression, use a def
+select = ["E", "F"]
+ignore = ["F841", "F401", "E731", "F821", "F722"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

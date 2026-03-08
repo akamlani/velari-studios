@@ -5,6 +5,8 @@ PYTHON_FILE  := ./config/runtime/python.env
 include $(RUNTIME_FILE)
 include $(PYTHON_FILE)
 
+export PACKAGE_INSTALL_NAME
+
 #################### Makefile Configuration
 GIT_ROOT ?= $(shell git rev-parse --show-toplevel)
 # e.g., Darwin for MacOS
@@ -19,6 +21,8 @@ else
 endif
 
 #################### Makefile Context
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c 
 .DEFAULT_GOAL := info
 
 .PHONY: help info info_dotfiles
@@ -80,7 +84,7 @@ link_vaultspace:
 	ln -sfn $(VAULTSPACE_ROOT)/promptlib 	stores/promptlib
 
 #################### Install Python Environment and Dependencies
-.PHONY: conda_config uv_download uv_install uv_sync install_python
+.PHONY: conda_config uv_download uv_install uv_sync_project_name uv_sync install_python
 
 install_python:
 	@echo "Installing Python with uv..."
@@ -122,3 +126,11 @@ uv_sync:
 	source $(PYTHON_VENV_DIR)/bin/activate && \
 	uv sync --active && uv pip install --upgrade pip ipykernel ipython && uv sync --active;
 #	uv pip install -e .;
+
+uv_sync_project_name:
+	@test -f "$(RUNTIME_FILE)" || { echo "Missing $(RUNTIME_FILE)"; exit 1; }
+	@test -f "$(PYTHON_FILE)"  || { echo "Missing $(PYTHON_FILE)"; exit 1; }
+	@echo "Using PACKAGE_INSTALL_NAME=$(PACKAGE_INSTALL_NAME)"
+	@echo "Before: $$(grep -E '^name[[:space:]]*=' pyproject.toml)"
+	@sed -E -i '' "s|^name[[:space:]]*=.*|name = \"$(PACKAGE_INSTALL_NAME)\"|" pyproject.toml
+	@echo "After : $$(grep -E '^name[[:space:]]*=' pyproject.toml)"
