@@ -41,3 +41,38 @@ info_dotfiles:
 	@echo "Dotfiles Remote:    $(DOTFILES_REMOTE)"
 	@echo "Dotfiles Branch:    $(BRANCH)"
 
+#################### Installation
+.PHONY: install install_setup install_dotfiles link_dotfiles link_vaultspace
+
+install:
+	@echo "Installing package $(PACKAGE_INSTALL_NAME) for development..."
+	$(MAKE) install_setup
+	$(MAKE) install_dotfiles
+	$(MAKE) link_vaultspace
+
+install_setup:
+	@echo "Installing Setup for $(PACKAGE_NAME)..."
+	mkdir -p .velari
+	mkdir -p _build config docs
+	touch .env.template
+	touch docs/.gitkeep
+
+install_dotfiles:
+	@echo "Installing Dotfiles from $(DOTFILES_REPO)..."
+	@if [ ! -d $(DOTFILES_DIR) ]; then \
+		git clone $(DOTFILES_REPO) $(DOTFILES_DIR) && $(MAKE) link_dotfiles; \
+	fi
+
+# links to dotfiles: e.g., .vscode, .github for project configuration and templates
+link_dotfiles:
+	@echo "Linking Dotfiles..."
+	ln -sf $(DOTFILES_DIR)/.vscode .vscode
+	ln -sf $(DOTFILES_DIR)/.github .github
+
+# links to obsidian vaults for contextlib, artifactlib, promptlib
+link_vaultspace:
+	@echo "Linking Vaultspace..."
+	mkdir -p stores
+	ln -sfn $(VAULTSPACE_ROOT)/contextlib 	stores/contextlib
+	ln -sfn $(VAULTSPACE_ROOT)/artifactlib 	stores/artifactlib
+	ln -sfn $(VAULTSPACE_ROOT)/promptlib 	stores/promptlib
