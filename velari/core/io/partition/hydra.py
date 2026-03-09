@@ -6,6 +6,7 @@ from omegaconf import DictConfig, OmegaConf
 
 
 def init_hydra() -> None:
+    """Clear the global Hydra instance if already initialised, preparing it for a fresh compose call."""
     if hydra.core.global_hydra.GlobalHydra.instance().is_initialized():
         hydra.core.global_hydra.GlobalHydra.instance().clear()
 
@@ -64,6 +65,13 @@ def read_hydra_compose(config_path: str, config_name: str = "config.yaml") -> Tu
 
     Returns:
         A tuple containing the composed DictConfig and its YAML string representation.
+
+    Examples:
+        >>> from velari.core.utils.env_utils import read_root_dir
+        >>> from pathlib import Path
+        >>> config_path = str(Path(read_root_dir()) / "config")
+        >>> cfg, cfg_yaml = read_hydra_compose(config_path, "config.yaml")
+        >>> print(cfg_yaml)
     """
     init_hydra()
 
